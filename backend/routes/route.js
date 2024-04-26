@@ -4,7 +4,7 @@ const {
   getAllUsers,
   postUser,
   deleteFn,
-  updateFn
+  updateFn,
 } = require("../controller/controllerFunctions");
 
 router.get("/get", getAllUsers);
@@ -14,4 +14,4 @@ router.put("/update/:id", updateFn);
 
 module.exports = router;
 
-module.exports = router;
+

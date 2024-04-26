@@ -7,17 +7,17 @@ const getAllUsers = async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
-};
+}
 
 const postUser = async (req, res) => {
   try {
-    const { name } = req.body;
-    const users = await User.create({ name });
+    const { todo } = req.body;
+    const users = await User.create({ todo });
     res.status(200).json(users);
   } catch (error) {
     res.status(200).json({ message: error.message });
   }
-};
+}
 
 const updateFn = async (req, res) => {
   try {
