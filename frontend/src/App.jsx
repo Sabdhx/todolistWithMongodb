@@ -1,44 +1,49 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./App.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import { MyContext } from "./Usecontext";
 
 function App() {
+  const { fetchData, todo, setTodo } = useContext(MyContext);
   const [input, setInput] = useState("");
-  const [todo, setTodo] = useState([]);
-  const [updateUI, setupdateUI] = useState(false);
+  const [updateUI, setUpdateUI] = useState(false);
+
+  const Navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const res = await axios.get("http://localhost:5000/get");
-        setTodo(res.data);
-      } catch (err) {
-        console.error("Error fetching data:", err);
-      }
-    };
-
     fetchData();
   }, [updateUI]);
 
-  const addingTask = () => {
+  const saveTodo = () => {
     axios
       .post("http://localhost:5000/post", { todo: input })
       .then((res) => {
+        setUpdateUI(!updateUI);
         console.log(res.data);
-        setupdateUI((prev) => !prev);
         setInput("");
       })
       .catch((err) => {
-        console.error("Error adding task:", err); // Corrected error message
+        console.log(err);
+      });
+    console.log("save");
+  };
+
+  const deleteFun = (id) => {
+    axios
+      .delete(`http://localhost:5000/delete/${id}`)
+      .then((res) => {
+        setUpdateUI(!updateUI);
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
-  
 
   return (
     <>
-      <div></div>
       <div>
-        text:{" "}
         <input
           type="text"
           className=""
@@ -48,15 +53,23 @@ function App() {
           }}
         />
         category: <input type="text" />
-        <button className="" onClick={addingTask}>
+        <button className="" onClick={saveTodo}>
           add
         </button>
       </div>
 
       <div>
-        {todo.map((item) => (
-          <div key={item.id}>{item.name}</div>
-        ))}
+        {todo.map((todo) => {
+          return (
+            <div key={todo._id}>
+              {todo.todo}
+              <button onClick={() => deleteFun(todo._id)}>delete</button>
+              <button onClick={() => Navigate(`update/${todo._id}`)}>
+                update
+              </button>
+            </div>
+          );
+        })}
       </div>
     </>
   );

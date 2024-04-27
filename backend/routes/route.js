@@ -13,5 +13,3 @@ router.delete("/delete/:id", deleteFn);
 router.put("/update/:id", updateFn);
 
 module.exports = router;
-
-

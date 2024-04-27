@@ -12,18 +12,18 @@ const getAllUsers = async (req, res) => {
 const postUser = async (req, res) => {
   try {
     const { todo } = req.body;
-    const users = await User.create({ todo });
-    res.status(200).json(users);
+    const users = await User.create({ todo })
+    res.status(200).json(users)
   } catch (error) {
-    res.status(200).json({ message: error.message });
+    res.status(200).json({ message: error.message })
   }
 }
 
 const updateFn = async (req, res) => {
   try {
     const { id } = req.params;
-    const { name } = req.body;
-    const users = await User.findByIdAndUpdate(id,{name});
+    const { todo } = req.body;
+    const users = await User.findByIdAndUpdate(id,{todo});
     res.status(200).json(users);
   } catch (error) {
     res.status(200).json({ message: error.message });
