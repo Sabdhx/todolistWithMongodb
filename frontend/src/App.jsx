@@ -16,17 +16,18 @@ function App() {
   }, [updateUI]);
 
   const saveTodo = () => {
-    axios
-      .post("http://localhost:5000/post", { todo: input })
-      .then((res) => {
-        setUpdateUI(!updateUI);
-        console.log(res.data);
-        setInput("");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-    console.log("save");
+    if (input.trim() !== "") { // Ensure input is not empty
+      axios
+        .post("http://localhost:5000/post", { todo: input })
+        .then((res) => {
+          setUpdateUI(!updateUI);
+          console.log(res.data);
+          setInput(""); // Reset input after saving todo
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   const deleteFun = (id) => {
@@ -48,9 +49,7 @@ function App() {
           type="text"
           className=""
           value={input}
-          onChange={(e) => {
-            setInput(e.target.value);
-          }}
+          onChange={(e) => setInput(e.target.value)}
         />
         category: <input type="text" />
         <button className="" onClick={saveTodo}>
@@ -59,17 +58,15 @@ function App() {
       </div>
 
       <div>
-        {todo.map((todo) => {
-          return (
-            <div key={todo._id}>
-              {todo.todo}
-              <button onClick={() => deleteFun(todo._id)}>delete</button>
-              <button onClick={() => Navigate(`update/${todo._id}`)}>
-                update
-              </button>
-            </div>
-          );
-        })}
+        {todo.map((todoItem) => (
+          <div key={todoItem._id}>
+            {todoItem.todo}
+            <button onClick={() => deleteFun(todoItem._id)}>delete</button>
+            <button onClick={() => Navigate(`update/${todoItem._id}`)}>
+              update
+            </button>
+          </div>
+        ))}
       </div>
     </>
   );

@@ -5,7 +5,6 @@ export const MyContext = createContext();
 function UseContext({ children }) {
   const [state, setState] = useState(0);
   const [todo, setTodo] = useState([]);
-
   const [id,setId]=useState("")
   const fetchData = async () => {
     try {

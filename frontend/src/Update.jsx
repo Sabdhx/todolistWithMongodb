@@ -1,30 +1,36 @@
-import React, { useContext, useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import { MyContext } from "./Usecontext";
 import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
-const Update = () => {
-  const [updatedTask, setUpdatedTask] = useState();
-  const id = useParams;
+function UpdatePage() {
+  const { id } = useParams();
   const [input, setInput] = useState("");
-  const Navigate = useNavigate("");
+  const [category, setCategory] = useState("");
 
   useEffect(() => {
-    axios
-      .get("http://localhost:5000/get")
-      .then((res) => {
-        setUpdatedTask(res.data);
+    const getData = async () => {
+      try {
+        const response = await axios.get("http://localhost:5000/todos/" + id);
+        const { data } = response;
+        setInput(data.todo); // Assuming 'todo' is the property that holds the todo text
+        // Assuming 'category' is the property that holds the category
+        setCategory(data.category); 
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    getData();
+  }, []);
+  
 
-        console.log();
-      })
-      .catch((err) => {
-        console.log(err)
-      });
-  }, [])
-  const handleUpdate = () => {
-    const data = axios.put(`http://localhost/update/${id}`, { updatedTask })
+  const navigate = useNavigate();
+  const updateinput = async () => {
+    const data = await axios.put("http://localhost:5000/todos/" + id, {
+      input,
+      category
+    });
     if (data.status == 200) {
-      Navigate("/")
+      navigate("/");
     }
   };
 
@@ -32,15 +38,17 @@ const Update = () => {
     <div>
       <input
         type="text"
-        className=""
         value={input}
-        onChange={(e) => {
-          setInput(e.target.value);
-        }}
+        onChange={(e) => setInput(e.target.value)}
       />
-      <button onClick={handleUpdate}>save</button>
+      <input
+        type="text"
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+      />
+      <button onClick={updateinput}>Update</button>
     </div>
   );
-};
+}
 
-export default Update;
+export default UpdatePage;
